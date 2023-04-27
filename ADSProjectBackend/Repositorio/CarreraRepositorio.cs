@@ -8,57 +8,86 @@ namespace ADSProjectBackend.Repositorio
 {
     public class CarreraRepositorio : ICarreraRepositorio
     {
-        private List<Carrera> lstCarreras;
+        private List<Carrera> lstCarrera;
         public CarreraRepositorio()
         {
-            lstCarreras = new List<Carrera>()
+            lstCarrera = new List<Carrera>()
             {
-                new Carrera
-                {
-                    idCarrera = 1,
-                    codigoCarrera = 1,
-                    nombreCarrera = "Sistemas"
-                }
+                new Carrera{idCarrera = 1, nombreCarrera = "Jose Anselmo", codigoCarrera = 1 }
+                
             };
+        }
+
+        public bool EliminarCarrera(int idCarrera)
+        {
+            try
+            {
+                lstCarrera.RemoveAt(lstCarrera.FindIndex(tmp => tmp.idCarrera == idCarrera));
+
+                return true;
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }
         }
 
         public int InsertarCarrera(Carrera carrera)
         {
             try
             {
-                if (lstCarreras.Count > 0)
+                // Se valida que la lista contenga elementos
+                if (lstCarrera.Count > 0)
                 {
-                    carrera.idCarrera = lstCarreras.Last().idCarrera + 1;
+                    // Se genera un id incremental a partir del ultimo elemento
+                    carrera.idCarrera = lstCarrera.Last().idCarrera + 1;
                 }
                 else
                 {
+                    // En caso contrario colocarle 1
                     carrera.idCarrera = 1;
                 }
-                lstCarreras.Add(carrera);
+                lstCarrera.Add(carrera);
+
+                return carrera.idCarrera;
             }
-            catch (Exception)
+            catch (System.Exception)
             {
+
                 throw;
             }
-            return carrera.idCarrera;
         }
-
-        public List<Carrera> ObtenerListaDeCarreras()
-        {
-            return lstCarreras;
-        }
-
-        public Carrera ObtenerListaDeCarrerasPorId(int id)
+        public int ModificarCarrera(int idCarrera, Carrera carrera)
         {
             try
             {
-                return lstCarreras.FirstOrDefault(temp => temp.idCarrera == id);
+                lstCarrera[lstCarrera.FindIndex(tmp => tmp.idCarrera == idCarrera)] = carrera;
+                return carrera.idCarrera;
             }
-            catch (Exception)
+            catch (System.Exception)
             {
 
                 throw;
             }
+        }
+
+        public Carrera ObtenerCarreraPorId(int idCarrera)
+        {
+            try
+            {
+                return lstCarrera.FirstOrDefault(tmp => tmp.idCarrera == idCarrera);
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public List<Carrera> ObtenerListaCarreras()
+        {
+            return lstCarrera;
         }
     }
 }
