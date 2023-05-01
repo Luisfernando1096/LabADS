@@ -28,6 +28,7 @@ namespace ADSProjectBackend
         {
             services.AddSingleton<IEstudianteRepositorio, EstudianteRepositorio>();
             services.AddSingleton<ICarreraRepositorio, CarreraRepositorio>();
+            services.AddSingleton<IGrupoRepositorio, GrupoRepositorio>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

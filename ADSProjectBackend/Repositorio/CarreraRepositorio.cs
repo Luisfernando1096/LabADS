@@ -13,8 +13,9 @@ namespace ADSProjectBackend.Repositorio
         {
             lstCarrera = new List<Carrera>()
             {
-                new Carrera{idCarrera = 1, nombreCarrera = "Jose Anselmo", codigoCarrera = 1 }
-                
+                new Carrera{idCarrera = 1, nombreCarrera = "Sistemas", codigoCarrera = 22 },
+                new Carrera{idCarrera = 2, nombreCarrera = "Electrica", codigoCarrera = 23 }
+
             };
         }
 
