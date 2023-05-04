@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ADSProjectBackend.Controllers
 {
     [Route("ADSProject/estudiantes")] // [Route("api/[controller]")]
+    [ApiController]
     public class EstudianteController : ControllerBase
     {
         private readonly IEstudianteRepositorio estudianteRepositorio;
@@ -17,33 +18,72 @@ namespace ADSProjectBackend.Controllers
         //Insertar estudiante
         [HttpPost("insertarEstudiante")]
         //El FromBody sirve para traer el objeto estudiante desde una variable body que esta en estudiante.service.ts
-        public int InsertarEstudiante([FromBody]Estudiante estudiante)
+        public ActionResult<int> InsertarEstudiante([FromBody]Estudiante estudiante)
         {
-            return estudianteRepositorio.InsertarEstudiante(estudiante);
+            int valor = this.estudianteRepositorio.InsertarEstudiante(estudiante);
+            if (valor > 0)
+            {
+                return Ok(valor);
+            }
+            else
+            {
+                return BadRequest("Error al insertar estudiante");
+            }
         }
         //Obtener lista de estudiantes
         [HttpGet("obtenerListaEstudiantes")]
-        public List<Estudiante> ObtenerListaEstudiantes()
+        public ActionResult<List<Estudiante>> ObtenerListaEstudiantes()
         {
-            return estudianteRepositorio.ObtenerListaEstudiantes();
+            var lstEstudiante = this.estudianteRepositorio.ObtenerListaEstudiantes();
+            if (lstEstudiante.Count > 0)
+            {
+                return Ok(lstEstudiante);
+            }
+            else
+            {
+                return BadRequest("Error al obtener lista de estudiantes");
+            }
         }
         //Obtener lista de estudiantes por id
         [HttpGet("obtenerEstudiante/{idEstudiante}")]
-        public Estudiante ObtenerListaEstudiantesPorId(int idEstudiante)
+        public ActionResult<Estudiante> ObtenerListaEstudiantesPorId(int idEstudiante)
         {
-            return estudianteRepositorio.ObtenerEstudiantePorId(idEstudiante);
+            var estudiante = this.estudianteRepositorio.ObtenerEstudiantePorId(idEstudiante);
+            if (estudiante != null)
+            {
+                return Ok(estudiante);
+            }
+            else
+            {
+                return BadRequest("Error al obtener estudiante");
+            }
         }
         //Eliminar estudiante
         [HttpDelete("eliminarEstudiante/{idEstudiante}")]
-        public bool EliminarEstudiante(int idEstudiante)
+        public ActionResult<bool> EliminarEstudiante(int idEstudiante)
         {
-            return estudianteRepositorio.EliminarEstudiante(idEstudiante);
+            if(this.estudianteRepositorio.ObtenerEstudiantePorId(idEstudiante) != null)
+            {
+                return Ok(this.estudianteRepositorio.EliminarEstudiante(idEstudiante));
+            }
+            else
+            {
+                return BadRequest("Error al eliminar estudiante");
+            }
         }
         //Actualizar estudiante
         [HttpPatch("actualizarEstudiante/{idEstudiante}")]
-        public int ModificarEstudiante(int idEstudiante, [FromBody]Estudiante estudiante)
+        public ActionResult<int> ModificarEstudiante(int idEstudiante, [FromBody]Estudiante estudiante)
         {
-            return estudianteRepositorio.ModificarEstudiante(idEstudiante, estudiante);
+            int valor = this.estudianteRepositorio.ModificarEstudiante(idEstudiante, estudiante);
+            if (valor > 0)
+            {
+                return Ok(valor);
+            }
+            else
+            {
+                return BadRequest("Error al actualizar estudiante");
+            }
         }
     }
 }
