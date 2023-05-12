@@ -20,33 +20,72 @@ namespace ADSProjectBackend.Controllers
         //Insertar
         [HttpPost("insertarMateria")]
         //El FromBody sirve para traer el objeto carrera desde una variable body que esta en carrera.service.ts
-        public int InsertarMateria([FromBody] Materia materia)
+        public ActionResult<int> InsertarMateria([FromBody] Materia materia)
         {
-            return materiaRepositorio.InsertarMateria(materia);
+            int valor = this.materiaRepositorio.InsertarMateria(materia);
+            if (valor > 0)
+            {
+                return Ok(valor);
+            }
+            else
+            {
+                return BadRequest("Error al insertar materia");
+            }
         }
         //Obtener lista
         [HttpGet("obtenerListaMaterias")]
-        public List<Materia> ObtenerListaMaterias()
+        public ActionResult<List<Materia>> ObtenerListaMaterias()
         {
-            return materiaRepositorio.ObtenerListaMaterias();
+            var lstMateria = this.materiaRepositorio.ObtenerListaMaterias();
+            if (lstMateria.Count > 0)
+            {
+                return Ok(lstMateria);
+            }
+            else
+            {
+                return BadRequest("Error al obtener lista de materias");
+            }
         }
         //Obtener lista por id
         [HttpGet("obtenerMateria/{idMateria}")]
-        public Materia ObtenerListaMateriasPorId(int idMateria)
+        public ActionResult<Materia> ObtenerListaMateriasPorId(int idMateria)
         {
-            return materiaRepositorio.ObtenerMateriaPorId(idMateria);
+            var materia = this.materiaRepositorio.ObtenerMateriaPorId(idMateria);
+            if (materia != null)
+            {
+                return Ok(materia);
+            }
+            else
+            {
+                return BadRequest("Error al obtener materia");
+            }
         }
         //Eliminar Carrera
         [HttpDelete("eliminarMateria/{idMateria}")]
-        public bool EliminarMateria(int idMateria)
+        public ActionResult<bool> EliminarMateria(int idMateria)
         {
-            return materiaRepositorio.EliminarMateria(idMateria);
+            if (this.materiaRepositorio.ObtenerMateriaPorId(idMateria) != null)
+            {
+                return Ok(this.materiaRepositorio.EliminarMateria(idMateria));
+            }
+            else
+            {
+                return BadRequest("Error al eliminar materia");
+            }
         }
         //Actualizar Carrera
         [HttpPatch("actualizarMateria/{idMateria}")]
-        public int ModificarMateria(int idMateria, [FromBody] Materia materia)
+        public ActionResult<int> ModificarMateria(int idMateria, [FromBody] Materia materia)
         {
-            return materiaRepositorio.ModificarMateria(idMateria, materia);
+            int valor = this.materiaRepositorio.ModificarMateria(idMateria, materia);
+            if (valor > 0)
+            {
+                return Ok(valor);
+            }
+            else
+            {
+                return BadRequest("Error al actualizar materia");
+            }
         }
     }
 }

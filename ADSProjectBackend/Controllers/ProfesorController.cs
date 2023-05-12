@@ -20,33 +20,72 @@ namespace ADSProjectBackend.Controllers
         //Insertar
         [HttpPost("insertarProfesor")]
         //El FromBody sirve para traer el objeto carrera desde una variable body que esta en carrera.service.ts
-        public int InsertarProfesor([FromBody] Profesor profesor)
+        public ActionResult<int> InsertarProfesor([FromBody] Profesor profesor)
         {
-            return profesorRepositorio.InsertarProfesor(profesor);
+            int valor = this.profesorRepositorio.InsertarProfesor(profesor);
+            if (valor > 0)
+            {
+                return Ok(valor);
+            }
+            else
+            {
+                return BadRequest("Error al insertar profesor");
+            }
         }
         //Obtener lista
         [HttpGet("obtenerListaProfesores")]
-        public List<Profesor> ObtenerListaProfesores()
+        public ActionResult<List<Profesor>> ObtenerListaProfesores()
         {
-            return profesorRepositorio.ObtenerListaProfesores();
+            var lstProfesor = this.profesorRepositorio.ObtenerListaProfesores();
+            if (lstProfesor.Count > 0)
+            {
+                return Ok(lstProfesor);
+            }
+            else
+            {
+                return BadRequest("Error al obtener lista de profesor");
+            }
         }
         //Obtener lista por id
         [HttpGet("obtenerProfesor/{idProfesor}")]
-        public Profesor ObtenerListaProfesoresPorId(int idProfesor)
+        public ActionResult<Profesor> ObtenerListaProfesoresPorId(int idProfesor)
         {
-            return profesorRepositorio.ObtenerProfesorPorId(idProfesor);
+            var profesor = this.profesorRepositorio.ObtenerProfesorPorId(idProfesor);
+            if (profesor != null)
+            {
+                return Ok(profesor);
+            }
+            else
+            {
+                return BadRequest("Error al obtener profesor");
+            }
         }
         //Eliminar
         [HttpDelete("eliminarProfesor/{idProfesor}")]
-        public bool EliminarProfesor(int idProfesor)
+        public ActionResult<bool> EliminarProfesor(int idProfesor)
         {
-            return profesorRepositorio.EliminarProfesor(idProfesor);
+            if (this.profesorRepositorio.ObtenerProfesorPorId(idProfesor) != null)
+            {
+                return Ok(this.profesorRepositorio.EliminarProfesor(idProfesor));
+            }
+            else
+            {
+                return BadRequest("Error al eliminar estudiante");
+            }
         }
         //Actualizar
         [HttpPatch("actualizarProfesor/{idProfesor}")]
-        public int ModificarProfesor(int idProfesor, [FromBody] Profesor profesor)
+        public ActionResult<int> ModificarProfesor(int idProfesor, [FromBody] Profesor profesor)
         {
-            return profesorRepositorio.ModificarProfesor(idProfesor, profesor);
+            int valor = this.profesorRepositorio.ModificarProfesor(idProfesor, profesor);
+            if (valor > 0)
+            {
+                return Ok(valor);
+            }
+            else
+            {
+                return BadRequest("Error al actualizar profesor");
+            }
         }
     }
 }
