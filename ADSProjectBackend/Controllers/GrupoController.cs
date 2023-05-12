@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 namespace ADSProjectBackend.Controllers
 {
     [Route("ADSProject/grupos")] // [Route("api/[controller]")]
+
+    [ApiController]
     public class GrupoController : ControllerBase
     {
         private readonly IGrupoRepositorio grupoRepositorio;
@@ -20,33 +22,72 @@ namespace ADSProjectBackend.Controllers
         //Insertar Grupo
         [HttpPost("insertarGrupo")]
         //El FromBody sirve para traer el objeto Grupo desde una variable body que esta en grupo.service.ts
-        public int InsertarGrupo([FromBody] Grupo grupo)
+        public ActionResult<int> InsertarGrupo([FromBody] Grupo grupo)
         {
-            return grupoRepositorio.InsertarGrupo(grupo);
+            int valor = this.grupoRepositorio.InsertarGrupo(grupo);
+            if (valor > 0)
+            {
+                return Ok(valor);
+            }
+            else
+            {
+                return BadRequest("Error al insertar grupo");
+            }
         }
         //Obtener lista de Grupos
         [HttpGet("obtenerListaGrupos")]
-        public List<Grupo> ObtenerListaGrupos()
+        public ActionResult<List<Grupo>> ObtenerListaGrupos()
         {
-            return grupoRepositorio.ObtenerListaGrupos();
+            var lstGrupos = this.grupoRepositorio.ObtenerListaGrupos();
+            if (lstGrupos.Count > 0)
+            {
+                return Ok(lstGrupos);
+            }
+            else
+            {
+                return BadRequest("Error al obtener lista de grupos");
+            }
         }
         //Obtener lista de Grupos por id
         [HttpGet("obtenerGrupo/{idGrupo}")]
-        public Grupo ObtenerListaGruposPorId(int idGrupo)
+        public ActionResult<Grupo>  ObtenerListaGruposPorId(int idGrupo)
         {
-            return grupoRepositorio.ObtenerGrupoPorId(idGrupo);
+            var grupo = this.grupoRepositorio.ObtenerGrupoPorId(idGrupo);
+            if (grupo != null)
+            {
+                return Ok(grupo);
+            }
+            else
+            {
+                return BadRequest("Error al obtener grupo");
+            }
         }
         //Eliminar Grupo
         [HttpDelete("eliminarGrupo/{idGrupo}")]
-        public bool EliminarGrupo(int idGrupo)
+        public ActionResult<bool> EliminarGrupo(int idGrupo)
         {
-            return grupoRepositorio.EliminarGrupo(idGrupo);
+            if (this.grupoRepositorio.ObtenerGrupoPorId(idGrupo) != null)
+            {
+                return Ok(this.grupoRepositorio.EliminarGrupo(idGrupo));
+            }
+            else
+            {
+                return BadRequest("Error al eliminar grupo");
+            }
         }
         //Actualizar Grupo
         [HttpPatch("actualizarGrupo/{idGrupo}")]
-        public int ModificarGrupo(int idGrupo, [FromBody] Grupo grupo)
+        public ActionResult<int> ModificarGrupo(int idGrupo, [FromBody] Grupo grupo)
         {
-            return grupoRepositorio.ModificarGrupo(idGrupo, grupo);
+            int valor = this.grupoRepositorio.ModificarGrupo(idGrupo, grupo);
+            if (valor > 0)
+            {
+                return Ok(valor);
+            }
+            else
+            {
+                return BadRequest("Error al actualizar grupo");
+            }
         }
     }
 }
