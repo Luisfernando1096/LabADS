@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 namespace ADSProjectBackend.Controllers
 {
     [Route("ADSProject/profesores")] // [Route("api/[controller]")]
+    [ApiController]
     public class ProfesorController : ControllerBase
     {
         private readonly IProfesorRepositorio profesorRepositorio;

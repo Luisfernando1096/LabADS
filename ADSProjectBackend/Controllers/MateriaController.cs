@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 namespace ADSProjectBackend.Controllers
 {
     [Route("ADSProject/materias")] // [Route("api/[controller]")]
+    [ApiController]
     public class MateriaController : ControllerBase
     {
         private readonly IMateriaRepositorio materiaRepositorio;
