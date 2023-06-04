@@ -2,10 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ADSProjectBackend.DBContext;
 using ADSProjectBackend.Repositorio;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -26,11 +28,13 @@ namespace ADSProjectBackend
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IEstudianteRepositorio, EstudianteRepositorio>();
-            services.AddSingleton<ICarreraRepositorio, CarreraRepositorio>();
-            services.AddSingleton<IGrupoRepositorio, GrupoRepositorio>();
-            services.AddSingleton<IProfesorRepositorio, ProfesorRepositorio>();
-            services.AddSingleton<IMateriaRepositorio, MateriaRepositorio>();
+            services.AddDbContext<ApplicationDbContext>(options =>
+            options.UseSqlServer(Configuration.GetConnectionString("defaultConnection")));
+            services.AddScoped<IEstudianteRepositorio, EstudianteRepositorio>();
+            services.AddScoped<ICarreraRepositorio, CarreraRepositorio>();
+            services.AddScoped<IGrupoRepositorio, GrupoRepositorio>();
+            services.AddScoped<IProfesorRepositorio, ProfesorRepositorio>();
+            services.AddScoped<IMateriaRepositorio, MateriaRepositorio>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

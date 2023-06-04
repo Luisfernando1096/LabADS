@@ -8,6 +8,7 @@ namespace ADSProjectBackend.Entidades
 {
     public class Profesor
     {
+        [Key]
         public int idProfesor { get; set; }
         [Required(ErrorMessage = "El campo {0} es requerido")]
         [EmailAddress(ErrorMessage = "Debe ingresar un correo valido")]

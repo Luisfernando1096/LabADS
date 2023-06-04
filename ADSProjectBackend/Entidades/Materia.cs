@@ -8,6 +8,7 @@ namespace ADSProjectBackend.Entidades
 {
     public class Materia
     {
+        [Key]
         public int idMateria { get; set; }
         [Required(ErrorMessage = "El campo {0} es requerido")]
         [StringLength(20, MinimumLength = 5, ErrorMessage = "El campo {0} debe estar entre 5 y 20 caracteres")]

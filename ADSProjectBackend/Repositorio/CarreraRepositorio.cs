@@ -1,4 +1,5 @@
-﻿using ADSProjectBackend.Entidades;
+﻿using ADSProjectBackend.DBContext;
+using ADSProjectBackend.Entidades;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,21 +10,18 @@ namespace ADSProjectBackend.Repositorio
     public class CarreraRepositorio : ICarreraRepositorio
     {
         private List<Carrera> lstCarrera;
-        public CarreraRepositorio()
+        private ApplicationDbContext applicationDbContext;
+        public CarreraRepositorio(ApplicationDbContext applicationDbContext)
         {
-            lstCarrera = new List<Carrera>()
-            {
-                new Carrera{idCarrera = 1, nombreCarrera = "Sistemas", codigoCarrera = 22 },
-                new Carrera{idCarrera = 2, nombreCarrera = "Electrica", codigoCarrera = 23 }
-
-            };
+            this.applicationDbContext = applicationDbContext;
         }
 
         public bool EliminarCarrera(int idCarrera)
         {
             try
             {
-                lstCarrera.RemoveAt(lstCarrera.FindIndex(tmp => tmp.idCarrera == idCarrera));
+                var item = applicationDbContext.Carreras.SingleOrDefault(x => x.idCarrera == idCarrera);
+                applicationDbContext.Carreras.Remove(item);
 
                 return true;
             }
@@ -38,18 +36,8 @@ namespace ADSProjectBackend.Repositorio
         {
             try
             {
-                // Se valida que la lista contenga elementos
-                if (lstCarrera.Count > 0)
-                {
-                    // Se genera un id incremental a partir del ultimo elemento
-                    carrera.idCarrera = lstCarrera.Last().idCarrera + 1;
-                }
-                else
-                {
-                    // En caso contrario colocarle 1
-                    carrera.idCarrera = 1;
-                }
-                lstCarrera.Add(carrera);
+                applicationDbContext.Carreras.Add(carrera);
+                applicationDbContext.SaveChanges();
 
                 return carrera.idCarrera;
             }
@@ -63,7 +51,9 @@ namespace ADSProjectBackend.Repositorio
         {
             try
             {
-                lstCarrera[lstCarrera.FindIndex(tmp => tmp.idCarrera == idCarrera)] = carrera;
+                var item = applicationDbContext.Carreras.SingleOrDefault(x => x.idCarrera == idCarrera);
+                applicationDbContext.Entry(item).CurrentValues.SetValues(carrera);
+                applicationDbContext.SaveChanges();
                 return carrera.idCarrera;
             }
             catch (System.Exception)
@@ -77,7 +67,7 @@ namespace ADSProjectBackend.Repositorio
         {
             try
             {
-                return lstCarrera.FirstOrDefault(tmp => tmp.idCarrera == idCarrera);
+                return applicationDbContext.Carreras.FirstOrDefault(x => x.idCarrera == idCarrera);
             }
             catch (System.Exception)
             {
@@ -88,7 +78,7 @@ namespace ADSProjectBackend.Repositorio
 
         public List<Carrera> ObtenerListaCarreras()
         {
-            return lstCarrera;
+            return applicationDbContext.Carreras.ToList();
         }
     }
 }

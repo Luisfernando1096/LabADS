@@ -1,4 +1,5 @@
-﻿using ADSProjectBackend.Entidades;
+﻿using ADSProjectBackend.DBContext;
+using ADSProjectBackend.Entidades;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,20 +10,17 @@ namespace ADSProjectBackend.Repositorio
     public class GrupoRepositorio : IGrupoRepositorio
     {
         private List<Grupo> lstGrupo;
-        public GrupoRepositorio()
+        private ApplicationDbContext applicationDbContext;
+        public GrupoRepositorio(ApplicationDbContext applicationDbContext)
         {
-            lstGrupo = new List<Grupo>()
-            {
-                new Grupo{idGrupo = 1, idMateria = 1, idProfesor = 1, idCarrera = 2, anio = 2023, ciclo = 01}
-
-            };
+            this.applicationDbContext = applicationDbContext;
         }
         public bool EliminarGrupo(int idGrupo)
         {
             try
             {
-                lstGrupo.RemoveAt(lstGrupo.FindIndex(tmp => tmp.idGrupo == idGrupo));
-
+                var item = applicationDbContext.Grupos.SingleOrDefault(x => x.idGrupo == idGrupo);
+                applicationDbContext.Grupos.Remove(item);
                 return true;
             }
             catch (System.Exception)
@@ -36,18 +34,8 @@ namespace ADSProjectBackend.Repositorio
         {
             try
             {
-                // Se valida que la lista contenga elementos
-                if (lstGrupo.Count > 0)
-                {
-                    // Se genera un id incremental a partir del ultimo elemento
-                    grupo.idGrupo = lstGrupo.Last().idGrupo + 1;
-                }
-                else
-                {
-                    // En caso contrario colocarle 1
-                    grupo.idGrupo = 1;
-                }
-                lstGrupo.Add(grupo);
+                applicationDbContext.Grupos.Add(grupo);
+                applicationDbContext.SaveChanges();
 
                 return grupo.idGrupo;
             }
@@ -62,7 +50,9 @@ namespace ADSProjectBackend.Repositorio
         {
             try
             {
-                lstGrupo[lstGrupo.FindIndex(tmp => tmp.idGrupo == idGrupo)] = grupo;
+                var item = applicationDbContext.Grupos.SingleOrDefault(x => x.idGrupo == idGrupo);
+                applicationDbContext.Entry(item).CurrentValues.SetValues(grupo);
+                applicationDbContext.SaveChanges();
                 return grupo.idGrupo;
             }
             catch (System.Exception)
@@ -76,7 +66,7 @@ namespace ADSProjectBackend.Repositorio
         {
             try
             {
-                return lstGrupo.FirstOrDefault(tmp => tmp.idGrupo == idGrupo);
+                return applicationDbContext.Grupos.FirstOrDefault(x => x.idGrupo == idGrupo);
             }
             catch (System.Exception)
             {
@@ -86,7 +76,7 @@ namespace ADSProjectBackend.Repositorio
 
         public List<Grupo> ObtenerListaGrupos()
         {
-            return lstGrupo;
+            return applicationDbContext.Grupos.ToList();
         }
     }
 }

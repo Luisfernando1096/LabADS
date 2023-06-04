@@ -4,6 +4,7 @@ namespace ADSProjectBackend.Entidades
 {
     public class Grupo
     {
+        [Key]
         public int idGrupo { get; set; }
         [Required(ErrorMessage = "El campo {0} es requerido")]
         public int idCarrera { get; set; }

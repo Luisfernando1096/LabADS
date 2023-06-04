@@ -1,4 +1,5 @@
-﻿using ADSProjectBackend.Entidades;
+﻿using ADSProjectBackend.DBContext;
+using ADSProjectBackend.Entidades;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,21 +10,18 @@ namespace ADSProjectBackend.Repositorio
     public class MateriaRepositorio : IMateriaRepositorio
     {
         private List<Materia> lstMateria;
-        public MateriaRepositorio()
+        private ApplicationDbContext applicationDbContext;
+        public MateriaRepositorio(ApplicationDbContext applicationDbContext)
         {
-            lstMateria = new List<Materia>()
-            {
-                new Materia{idMateria = 1, nombreMateria = "Fisica" },
-                new Materia{idMateria = 2, nombreMateria = "Programacion" }
-
-            };
+            this.applicationDbContext = applicationDbContext;
         }
 
         public bool EliminarMateria(int idMateria)
         {
             try
             {
-                lstMateria.RemoveAt(lstMateria.FindIndex(tmp => tmp.idMateria == idMateria));
+                var item = applicationDbContext.Materias.SingleOrDefault(x => x.idMateria == idMateria);
+                applicationDbContext.Materias.Remove(item);
 
                 return true;
             }
@@ -38,18 +36,8 @@ namespace ADSProjectBackend.Repositorio
         {
             try
             {
-                // Se valida que la lista contenga elementos
-                if (lstMateria.Count > 0)
-                {
-                    // Se genera un id incremental a partir del ultimo elemento
-                    materia.idMateria = lstMateria.Last().idMateria + 1;
-                }
-                else
-                {
-                    // En caso contrario colocarle 1
-                    materia.idMateria = 1;
-                }
-                lstMateria.Add(materia);
+                applicationDbContext.Materias.Add(materia);
+                applicationDbContext.SaveChanges();
 
                 return materia.idMateria;
             }
@@ -63,7 +51,9 @@ namespace ADSProjectBackend.Repositorio
         {
             try
             {
-                lstMateria[lstMateria.FindIndex(tmp => tmp.idMateria == idMateria)] = materia;
+                var item = applicationDbContext.Materias.SingleOrDefault(x => x.idMateria == idMateria);
+                applicationDbContext.Entry(item).CurrentValues.SetValues(materia);
+                applicationDbContext.SaveChanges();
                 return materia.idMateria;
             }
             catch (System.Exception)
@@ -77,7 +67,7 @@ namespace ADSProjectBackend.Repositorio
         {
             try
             {
-                return lstMateria.FirstOrDefault(tmp => tmp.idMateria == idMateria);
+                return applicationDbContext.Materias.FirstOrDefault(x => x.idMateria == idMateria);
             }
             catch (System.Exception)
             {
@@ -88,7 +78,7 @@ namespace ADSProjectBackend.Repositorio
 
         public List<Materia> ObtenerListaMaterias()
         {
-            return lstMateria;
+            return applicationDbContext.Materias.ToList();
         }
     }
 }

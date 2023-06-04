@@ -8,6 +8,7 @@ namespace ADSProjectBackend.Entidades
 {
     public class Carrera
     {
+        [Key]
         public int idCarrera { get; set; }
         [Required(ErrorMessage = "El campo {0} es requerido")]
         [Range(1, 9999, ErrorMessage = "El campo {0} debe estar entre 1 y 9999")]

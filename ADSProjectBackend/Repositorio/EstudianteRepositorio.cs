@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using ADSProjectBackend.DBContext;
 using ADSProjectBackend.Entidades;
 
 namespace ADSProjectBackend.Repositorio
@@ -7,9 +8,10 @@ namespace ADSProjectBackend.Repositorio
     public class EstudianteRepositorio : IEstudianteRepositorio
     {
         private List<Estudiante> lstEstudiante;
-        public EstudianteRepositorio()
+        private ApplicationDbContext applicationDbContext;
+        public EstudianteRepositorio(ApplicationDbContext applicationDbContext)
         {
-            lstEstudiante = new List<Estudiante>()
+            /*lstEstudiante = new List<Estudiante>()
             {
                 new Estudiante{Id = 1, Nombres = "Jose Anselmo",
                 Apellidos = "Perez Martinez", Codigo = "CG21I04001",
@@ -17,15 +19,18 @@ namespace ADSProjectBackend.Repositorio
                 new Estudiante{Id = 2, Nombres = "Jose Manuel",
                 Apellidos = "Ruiz Martinez", Codigo = "CG21I04001",
                 Email =  "RM21I04001@usonsonate.edu.sv"}
-            };
+            };*/
+            this.applicationDbContext = applicationDbContext;
         }
 
         public bool EliminarEstudiante(int idEstudiante)
         {
             try
             {
-                lstEstudiante.RemoveAt(lstEstudiante.FindIndex(tmp => tmp.Id == idEstudiante));
-                
+                /*lstEstudiante.RemoveAt(lstEstudiante.FindIndex(tmp => tmp.Id == idEstudiante));*/
+                var item = applicationDbContext.Estudiantes.SingleOrDefault(x => x.Id == idEstudiante);
+                applicationDbContext.Estudiantes.Remove(item);
+                applicationDbContext.SaveChanges();
                 return true;
             }
             catch (System.Exception)
@@ -39,7 +44,7 @@ namespace ADSProjectBackend.Repositorio
         {
             try
             {
-                // Se valida que la lista contenga elementos
+                /*// Se valida que la lista contenga elementos
                 if(lstEstudiante.Count > 0)
                 {
                     // Se genera un id incremental a partir del ultimo elemento
@@ -49,8 +54,10 @@ namespace ADSProjectBackend.Repositorio
                     // En caso contrario colocarle 1
                     estudiante.Id = 1;
                 }
-                lstEstudiante.Add(estudiante);
+                lstEstudiante.Add(estudiante);*/
 
+                applicationDbContext.Estudiantes.Add(estudiante);
+                applicationDbContext.SaveChanges();
                 return estudiante.Id;
             }
             catch (System.Exception)
@@ -63,7 +70,10 @@ namespace ADSProjectBackend.Repositorio
         {
             try
             {
-                lstEstudiante[lstEstudiante.FindIndex(tmp => tmp.Id == idEstudiante)] = estudiante;
+                /*lstEstudiante[lstEstudiante.FindIndex(tmp => tmp.Id == idEstudiante)] = estudiante;*/
+                var item = applicationDbContext.Estudiantes.SingleOrDefault(x => x.Id == idEstudiante);
+                applicationDbContext.Entry(item).CurrentValues.SetValues(estudiante);
+                applicationDbContext.SaveChanges();
                 return estudiante.Id;
             }
             catch (System.Exception)
@@ -77,8 +87,9 @@ namespace ADSProjectBackend.Repositorio
         {
             try
             {
-                return lstEstudiante.FirstOrDefault(tmp => tmp.Id == idEstudiante);
-                }
+                /*return lstEstudiante.FirstOrDefault(tmp => tmp.Id == idEstudiante);*/
+                return applicationDbContext.Estudiantes.FirstOrDefault(x => x.Id == idEstudiante);
+            }
             catch (System.Exception)
             {
 
@@ -88,7 +99,8 @@ namespace ADSProjectBackend.Repositorio
 
         public List<Estudiante> ObtenerListaEstudiantes()
         {
-            return lstEstudiante;
+            /*return lstEstudiante;*/
+            return applicationDbContext.Estudiantes.ToList();
         }
     }
 }

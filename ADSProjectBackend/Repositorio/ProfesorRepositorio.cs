@@ -1,4 +1,5 @@
-﻿using ADSProjectBackend.Entidades;
+﻿using ADSProjectBackend.DBContext;
+using ADSProjectBackend.Entidades;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,21 +10,18 @@ namespace ADSProjectBackend.Repositorio
     public class ProfesorRepositorio : IProfesorRepositorio
     {
         private List<Profesor> lstProfesor;
-        public ProfesorRepositorio()
+        private ApplicationDbContext applicationDbContext;
+        public ProfesorRepositorio(ApplicationDbContext applicationDbContext)
         {
-            lstProfesor = new List<Profesor>()
-            {
-                new Profesor{idProfesor = 1, emailProfesor = "JoseAnselmo@gmail.com", nombresProfesor = "Jose Anselmo", apellidosProfesor = "Jose Anselmo"},
-                new Profesor{idProfesor = 2, emailProfesor = "JoseAnselmo@gmail.com", nombresProfesor = "Jose", apellidosProfesor = "Jose Anselmo"}
-
-            };
+            this.applicationDbContext = applicationDbContext;
         }
 
         public bool EliminarProfesor(int idProfesor)
         {
             try
             {
-                lstProfesor.RemoveAt(lstProfesor.FindIndex(tmp => tmp.idProfesor == idProfesor));
+                var item = applicationDbContext.Profesores.SingleOrDefault(x => x.idProfesor == idProfesor);
+                applicationDbContext.Profesores.Remove(item);
 
                 return true;
             }
@@ -38,18 +36,8 @@ namespace ADSProjectBackend.Repositorio
         {
             try
             {
-                // Se valida que la lista contenga elementos
-                if (lstProfesor.Count > 0)
-                {
-                    // Se genera un id incremental a partir del ultimo elemento
-                    profesor.idProfesor = lstProfesor.Last().idProfesor + 1;
-                }
-                else
-                {
-                    // En caso contrario colocarle 1
-                    profesor.idProfesor = 1;
-                }
-                lstProfesor.Add(profesor);
+                applicationDbContext.Profesores.Add(profesor);
+                applicationDbContext.SaveChanges();
 
                 return profesor.idProfesor;
             }
@@ -63,7 +51,9 @@ namespace ADSProjectBackend.Repositorio
         {
             try
             {
-                lstProfesor[lstProfesor.FindIndex(tmp => tmp.idProfesor == idProfesor)] = profesor;
+                var item = applicationDbContext.Profesores.SingleOrDefault(x => x.idProfesor == idProfesor);
+                applicationDbContext.Entry(item).CurrentValues.SetValues(profesor);
+                applicationDbContext.SaveChanges();
                 return profesor.idProfesor;
             }
             catch (System.Exception)
@@ -77,7 +67,7 @@ namespace ADSProjectBackend.Repositorio
         {
             try
             {
-                return lstProfesor.FirstOrDefault(tmp => tmp.idProfesor == idProfesor);
+                return applicationDbContext.Profesores.FirstOrDefault(x => x.idProfesor == idProfesor);
             }
             catch (System.Exception)
             {
@@ -88,7 +78,7 @@ namespace ADSProjectBackend.Repositorio
 
         public List<Profesor> ObtenerListaProfesores()
         {
-            return lstProfesor;
+            return applicationDbContext.Profesores.ToList();
         }
     }
 }
