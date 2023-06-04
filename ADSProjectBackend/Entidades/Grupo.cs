@@ -15,7 +15,7 @@ namespace ADSProjectBackend.Entidades
         [Range(1, 2, ErrorMessage = "El campo {0} debe estar entre 1 y 2")]
         public int ciclo { get; set; }
         [Required(ErrorMessage = "El campo {0} es requerido")]
-        [Range(1, 9999, ErrorMessage = "El campo {0} debe estar entre 1 y 9999")]
+        [Range(1, 99999, ErrorMessage = "El campo {0} debe estar entre 1 y 99999")]
         public int anio { get; set; }
 
     }

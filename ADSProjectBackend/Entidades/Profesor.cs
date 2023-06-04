@@ -13,10 +13,10 @@ namespace ADSProjectBackend.Entidades
         [EmailAddress(ErrorMessage = "Debe ingresar un correo valido")]
         public String emailProfesor { get; set; }
         [Required(ErrorMessage = "El campo {0} es requerido")]
-        [StringLength(50, MinimumLength = 2, ErrorMessage = "El campo {0} debe estar entre 2 y 50 caracteres")]
+        [StringLength(40, MinimumLength = 2, ErrorMessage = "El campo {0} debe estar entre 2 y 40 caracteres")]
         public String nombresProfesor { get; set; }
         [Required(ErrorMessage = "El campo {0} es requerido")]
-        [StringLength(50, MinimumLength = 2, ErrorMessage = "El campo {0} debe estar entre 2 y 50 caracteres")]
+        [StringLength(40, MinimumLength = 2, ErrorMessage = "El campo {0} debe estar entre 2 y 40 caracteres")]
         public String apellidosProfesor { get; set; }
     }
 }
