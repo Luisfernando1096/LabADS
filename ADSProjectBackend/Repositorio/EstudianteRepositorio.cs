@@ -5,21 +5,14 @@ using ADSProjectBackend.Entidades;
 
 namespace ADSProjectBackend.Repositorio
 {
+
     public class EstudianteRepositorio : IEstudianteRepositorio
     {
         private List<Estudiante> lstEstudiante;
         private ApplicationDbContext applicationDbContext;
         public EstudianteRepositorio(ApplicationDbContext applicationDbContext)
         {
-            /*lstEstudiante = new List<Estudiante>()
-            {
-                new Estudiante{Id = 1, Nombres = "Jose Anselmo",
-                Apellidos = "Perez Martinez", Codigo = "CG21I04001",
-                Email =  "CG21I04001@usonsonate.edu.sv"},
-                new Estudiante{Id = 2, Nombres = "Jose Manuel",
-                Apellidos = "Ruiz Martinez", Codigo = "CG21I04001",
-                Email =  "RM21I04001@usonsonate.edu.sv"}
-            };*/
+            
             this.applicationDbContext = applicationDbContext;
         }
 

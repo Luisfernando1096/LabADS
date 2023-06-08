@@ -21,6 +21,7 @@ namespace ADSProjectBackend.Repositorio
             {
                 var item = applicationDbContext.Grupos.SingleOrDefault(x => x.idGrupo == idGrupo);
                 applicationDbContext.Grupos.Remove(item);
+                applicationDbContext.SaveChanges();
                 return true;
             }
             catch (System.Exception)

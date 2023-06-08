@@ -22,6 +22,7 @@ namespace ADSProjectBackend.Repositorio
             {
                 var item = applicationDbContext.Materias.SingleOrDefault(x => x.idMateria == idMateria);
                 applicationDbContext.Materias.Remove(item);
+                applicationDbContext.SaveChanges();
 
                 return true;
             }

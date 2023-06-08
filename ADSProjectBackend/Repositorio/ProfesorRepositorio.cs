@@ -22,6 +22,7 @@ namespace ADSProjectBackend.Repositorio
             {
                 var item = applicationDbContext.Profesores.SingleOrDefault(x => x.idProfesor == idProfesor);
                 applicationDbContext.Profesores.Remove(item);
+                applicationDbContext.SaveChanges();
 
                 return true;
             }

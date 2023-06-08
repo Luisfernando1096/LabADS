@@ -22,6 +22,7 @@ namespace ADSProjectBackend.Repositorio
             {
                 var item = applicationDbContext.Carreras.SingleOrDefault(x => x.idCarrera == idCarrera);
                 applicationDbContext.Carreras.Remove(item);
+                applicationDbContext.SaveChanges();
 
                 return true;
             }
